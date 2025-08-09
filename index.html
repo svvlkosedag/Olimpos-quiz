@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>12 Olimpos Karakter Testi</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('https://cdn.thecollector.com/wp-content/uploads/2020/06/giulio-romano-olympian-gods-wall-painting-1.jpg?width=1400&quality=70') no-repeat center center fixed;
+    background-size: cover;
+    color: black;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 15px;
+  }
+  #quizContainer {
+    background: rgba(255, 249, 196, 0.85); /* Açık sarı */
+    border-radius: 15px;
+    padding: 25px 30px;
+    max-width: 720px;
+    width: 100%;
+    box-shadow: 0 0 25px rgba(255, 249, 196, 0.9); /* Açık sarı gölge */
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: black;
+    text-shadow: none;
+  }
+  form {
+    margin-top: 10px;
+  }
+  .question {
+    margin-bottom: 30px;
+  }
+  .question h2 {
+    margin-bottom: 18px;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: black;
+    text-shadow: none;
+  }
+  /* Seçenek listeleri */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .option-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(230, 230, 250, 0.15);
+    box-shadow: 0 0 12px rgba(255, 249, 196, 0.6); /* Açık sarı gölge */
+    transition: background-color 0.3s ease;
+    color: black;
+  }
+  .option-label:hover {
+    background: rgba(230, 230, 250, 0.35);
+  }
+  .option-label input[type="radio"] {
+    margin-right: 15px;
+    transform: scale(1.2);
+    accent-color: #800080;
+  }
+  /* Seçildiğinde renk */
+  .option-label input[type="radio"]:checked + span {
+    background: rgba(255, 249, 196, 0.7); /* Açık sarı seçili arka plan */
+    box-shadow: 0 0 15px 3px #d6b3ff;
+    border-radius: 10px;
+    padding: 6px 10px;
+    color: black;
+  }
+  /* Mevsim sorusu grid stili */
+  .season-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .season-option {
+    background: rgba(230, 230, 250, 0.15);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 12px rgba(255, 249, 196, 0.6); /* Açık sarı gölge */
+    transition: background-color 0.3s ease;
+    user-select: none;
+    color: black;
+  }
+  .season-option:hover {
+    background: rgba(230, 230, 250, 0.35);
+  }
+  .season-option input[type="radio"] {
+    display: none;
+  }
+  .season-option input[type="radio"]:checked + label {
+    background: rgba(255, 249, 196, 0.7); /* Açık sarı seçili */
+    box-shadow: 0 0 15px 3px #d6b3ff;
+    color: black;
+  }
+  .season-option img {
+    width: 160px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 0 10px #9b59b6;
+  }
+  .season-option label {
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+    user-select: none;
+    color: black;
+  }
+  button {
+    display: block;
+    margin: 0 auto 30px auto;
+    background: #7b2ff7;
+    border: none;
+    color: white;
+    font-size: 1.3rem;
+    padding: 14px 28px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #9b59b6;
+    transition: background-color 0.25s ease;
+  }
+  button:hover {
+    background: #5a17cc;
+  }
+  #result {
+    background: rgba(230, 230, 250, 0.4);
+    border-radius: 15px;
+    padding: 20px 25px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: black;
+    box-shadow: 0 0 25px #7b2ff7;
+    min-height: 80px;
+  }
+  .character-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-left: 12px;
+    border-radius: 50%;
+    border: 2px solid #7b2ff7;
+  }
+  @media (max-width: 480px) {
+    .season-option img {
+      width: 120px;
+      height: 90px;
+    }
+    .season-option label,
+    .option-label {
+      font-size: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="quizContainer">
+  <h1>Hangi Olimposlusun?</h1>
+  <form id="quizForm">
+
+    <!-- 1 -->
+    <div class="question">
+      <h2>1. Zor bir durumda nasıl davranırsın?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q1" value="athena" required><span>Durumu soğukkanlılıkla analiz ederim.</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="ares"><span>Hemen harekete geçerim.</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="afrodit"><span>İnsanların moralini yükseltmeye çalışırım.</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="zeus"><span>Durumu yönetip kontrol altına alırım.</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="artemis"><span>Doğaya çekilip sakinleşirim.</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="hephaistos"><span>Yenilikçi ve yaratıcı çözümler bulurum.</span></label>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="question">
+      <h2>2. Boş zamanlarında ne yapmayı tercih edersin?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q2" value="zeus" required><span>Yeni planlar yapıp liderlik ederim.</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="athena"><span>Kitap okuyup kendimi geliştiririm.</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="ares"><span>Spor yapar, maceralara atılırım.</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="demeter"><span>Doğada vakit geçiririm.</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="afrodit"><span>Sosyal etkinliklerde bulunurum.</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="hephaistos"><span>Atölyede el işiyle uğraşırım.</span></label>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="question">
+      <h2>3. Başkaları senden ne bekler?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q3" value="hera" required><span>Güçlü ve adaletli bir lider olmanı.</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="apollo"><span>Bilge ve akıllı fikirler sunmanı.</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="poseidon"><span>Cesaretli ve kararlı olmanı.</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="demeter"><span>Doğaya ve aileye bağlı kalmanı.</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="afrodit"><span>Cazibeli ve sevgi dolu olmanı.</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="hermes"><span>Yaratıcı ve pratik çözümler üretmeni.</span></label>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="question">
+      <h2>4. Hangi söz sana ait olabilir?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q4" value="ares" required><span>Asla pes etme ve bir kavgada ilk sen vur.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="zeus"><span>Beni yıkmayan her şey beni güçlendirir.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="athena"><span>Bilgeliğin ilk adımı herşeyden şikayet etmek, sonuncusu ise herşeyle uyuşmaktır.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="hera"><span>Bir kadının yüzünde taşıdığı ifade, sırtında giydiği elbiseden daha önemlidir.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="hermes"><span>Hayatta en büyük eğlence başkasının yapamazsın dediğini yapmaktır.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="artemis"><span>Kaplumbağaya dikkat et! Ancak kafasını çıkarıp risk aldığında ilerleyebilir.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="hestia"><span>Sabır kara bir dikeni yutmak, diken içini parçalayıp geçerken de hiç ses çıkarmamaktır.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="afrodit"><span>Sevgi basittir, karmaşık olan bizleriz. Sevgi güven verir, insanlar aldatır. Sevgiye her zaman güvenilir, insanlara asla.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="hephaistos"><span>İz bırakmak için görünmen gerekmez.</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="apollo"><span>Yarın, geri kalan ömrümün ilk günüdür.</span></label>
+      </div>
+    </div>
+
+    <!-- 5 Mevsim sorusu -->
+    <div class="question">
+      <h2>5. En çok hangi mevsimi seversin?</h2>
+      <div class="season-options">
+
+        <div class="season-option">
+          <input type="radio" id="season-yaz" name="q5" value="zeus" required />
+          <label for="season-yaz">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkeGxKPefM4AT7eEiS-NvAXMBDyuWATx6bWA&s" alt="Yaz" />
+            Yaz
+          </label>
+        </div>
+
+        <div class="season-option">
+          <input type="radio" id="season-sonbahar" name="q5" value="athena" />
+          <label for="season-sonbahar">
+            <img src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Sonbahar" />
+            Sonbahar
+          </label>
+        </div>
+
+        <div class="season-option">
+          <input type="radio" id="season-kis" name="q5" value="hestia" />
+          <label for="season-kis">
+            <img src="https://www.nukteler.com/wp-content/uploads/2021/10/winter_kis_captions.jpg" alt="Kış" />
+            Kış
+          </label>
+        </div>
+
+        <div class="season-option">
+          <input type="radio" id="season-ilkbahar" name="q5" value="demeter" />
+          <label for="season-ilkbahar">
+            <img src="https://cdn.britannica.com/05/155405-050-F8969EE6/Spring-flowers-fruit-trees-bloom.jpg" alt="İlkbahar" />
+            İlkbahar
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="question">
+      <h2>6. En çok hangi süper güce sahip olmak isterdin?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q6" value="zeus" required><span>Hava ve gökleri kontrol etmek</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="athena"><span>Bilgelik ve strateji gücü</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="poseidon"><span>Denizleri ve depremleri yönetmek</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="ares"><span>Savaşta üstün güç</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="afrodit"><span>Sevgi ve cazibe gücü</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="hermes"><span>Hız ve iletişim gücü</span></label>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="question">
+      <h2>7. Bu hayattaki en büyük korkun nedir?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q7" value="hades" required><span>Ölüm ve karanlık</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="hera"><span>İhanet ve aldatılmak</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="athena"><span>Yetersiz kalmak</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="ares"><span>Kaybetmek ve başarısızlık</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="poseidon"><span>Kontrolü kaybetmek</span></label>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="question">
+      <h2>8. Hayattaki en erdemli duygu sence hangisi?</h2>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="q8" value="hera" required><span>Adalet</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="afrodit"><span>Sevgi</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="athena"><span>Bilgelik</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="demeter"><span>Sadakat</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="hephaistos"><span>Yaratıcılık</span></label>
+      </div>
+    </div>
+
+<!-- 9 Yeni soru: Karakter seçimi -->
+<div class="question">
+  <h2>9. En çok hangi karakterle özdeşleşiyorsun?</h2>
+  <div class="options" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+    <label class="option-label" style="flex-direction: column; align-items: center;">
+      <input type="radio" name="q9" value="zeus" required style="margin-bottom: 10px; transform: scale(1.2);" />
+      <img
+        src="https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15329653/Jon_snow.0.1536999998.jpg?quality=90&strip=all&crop=7.8125,0,84.375,100"
+        alt="Jon Snow"
+        style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+      />
+      Jon Snow (Game of Thrones)
+    </label>
+
+    <label class="option-label" style="flex-direction: column; align-items: center;">
+      <input type="radio" name="q9" value="afrodit" style="margin-bottom: 10px; transform: scale(1.2);" />
+      <img
+        src="https://upload.wikimedia.org/wikipedia/en/1/19/Amy_Dunne.jpg"
+        alt="Barbie"
+        style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+      />
+      Amy Dunne (Gone Girl)
+    </label>
+
+    <label class="option-label" style="flex-direction: column; align-items: center;">
+      <input type="radio" name="q9" value="artemis" style="margin-bottom: 10px; transform: scale(1.2);" />
+      <img
+        src="https://static.standard.co.uk/s3fs-public/thumbnails/image/2015/11/06/08/22hungergamesmain0611a.jpg?crop=8:5,smart&quality=75&auto=webp&width=1000"
+        alt="Katniss Everdeen"
+        style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+      />
+      Katniss Everdeen (The Hunger Games)
+    </label>
+
+    <label class="option-label" style="flex-direction: column; align-items: center;">
+      <input type="radio" name="q9" value="hephaistos" style="margin-bottom: 10px; transform: scale(1.2);" />
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIE6akxbDq-f8xBU2_zZVZ9tPd4klnMvDMOg&s"
+        alt="Tony Stark / Iron Man"
+        style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+      />
+      Tony Stark / Iron Man (Marvel)
+    </label>
+
+    <label class="option-label" style="flex-direction: column; align-items: center;">
+      <input type="radio" name="q9" value="ares" style="margin-bottom: 10px; transform: scale(1.2);" />
+      <img
+        src="https://i.pinimg.com/originals/46/4c/44/464c44ad980cda60479023576333d5c3.jpg"
+        alt="Bellatrix Lestrange"
+        style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+      />
+      Bellatrix Lestrange (Harry Potter)
+    </label>
+
+    <label class="option-label" style="flex-direction: column; align-items: center;">
+      <input type="radio" name="q9" value="athena" style="margin-bottom: 10px; transform: scale(1.2);" />
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Benedict_Cumberbatch_filming_Sherlock_cropped2.jpg"
+        alt="Sherlock Holmes"
+        style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+      />
+      Sherlock Holmes (Sherlock)
+    </label>
+
+    <!-- Son satır sadece 1 tane karakter, ortalanacak -->
+    <div style="grid-column: 1 / span 3; display: flex; justify-content: center;">
+      <label class="option-label" style="flex-direction: column; align-items: center; max-width: 160px;">
+        <input type="radio" name="q9" value="hades" style="margin-bottom: 10px; transform: scale(1.2);" />
+        <img
+          src="https://metode.org/wp-content/uploads/2024/03/hannibal-lecter.jpg"
+          alt="Hannibal Lecter"
+          style="width: 160px; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 0 10px #9b59b6;"
+        />
+        Hannibal Lecter (Hannibal)
+      </label>
+    </div>
+  </div>
+</div>
+
+
+ 
+    <button type="submit">Sonucu Göster</button>
+  </form>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  const form = document.getElementById('quizForm');
+  const resultDiv = document.getElementById('result');
+
+  // Tanrılar puanları başlangıç
+  const scores = {
+    zeus: 0,
+    hera: 0,
+    poseidon: 0,
+    demeter: 0,
+    athena: 0,
+    apollo: 0,
+    artemis: 0,
+    ares: 0,
+    afrodit: 0,
+    hephaistos: 0,
+    hermes: 0,
+    hestia: 0,
+    hades: 0
+  };
+
+  // Özel puan ayarları
+  // 7. sorunun a şıkkı (hades) 3 puan
+  // Apollo ve Artemis seçenekleri 2 puan
+  // Hades şıkkı genel 3 puan
+  const specialPoints = {
+    hades: 3,
+    apollo: 2,
+    artemis: 2
+  };
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Sıfırla
+    for (let key in scores) {
+      scores[key] = 0;
+    }
+
+    // Sorular ve puanlama:
+    // 1 - 8 sorular
+    // Burada her sorunun cevabına göre puan eklenir.
+    // 7. sorunun a şıkkı ve hades 3 puan.
+    // Apollo ve Artemis 2 puan.
+
+    // Q1
+    const q1 = form.q1.value;
+    scores[q1] += (specialPoints[q1] || 1);
+
+    // Q2
+    const q2 = form.q2.value;
+    scores[q2] += (specialPoints[q2] || 1);
+
+    // Q3
+    const q3 = form.q3.value;
+    scores[q3] += (specialPoints[q3] || 1);
+
+    // Q4
+    const q4 = form.q4.value;
+    scores[q4] += (specialPoints[q4] || 1);
+
+    // Q5 (Mevsim)
+    const q5 = form.q5.value;
+    // Mevsime göre Zeus ve Ares yazdayken +1 puan her ikisine eklenmeli diye kodda ayrı mekanizma olabilir
+    // Ama biz direkt seçilen mevsim tanrısına puan veriyoruz.
+    scores[q5] += (specialPoints[q5] || 1);
+
+    // Q6
+    const q6 = form.q6.value;
+    scores[q6] += (specialPoints[q6] || 1);
+
+    // Q7
+    const q7 = form.q7.value;
+    if (q7 === 'hades') {
+      scores[q7] += 3; // 7. sorunun a şıkkı 3 puan
+    } else {
+      scores[q7] += (specialPoints[q7] || 1);
+    }
+
+    // Q8
+    const q8 = form.q8.value;
+    scores[q8] += (specialPoints[q8] || 1);
+
+    // Q9 Yeni soru: karakter seçimi
+    const q9 = form.q9.value;
+    // Apollo ve Artemis 2 puan, Hades 3 puan, diğerleri 1 puan
+    scores[q9] += (specialPoints[q9] || 1);
+
+    // En yüksek puanlı tanrıyı bul
+    let maxScore = -Infinity;
+    let topGods = [];
+    for (const god in scores) {
+      if (scores[god] > maxScore) {
+        maxScore = scores[god];
+        topGods = [god];
+      } else if (scores[god] === maxScore) {
+        topGods.push(god);
+      }
+    }
+
+    // En yüksek puanlıdan bir tanesini seç (eşitlik varsa ilk)
+    const winner = topGods[0];
+
+    // Karakter özel emoji ve mesajları
+    const messages = {
+      zeus: { emoji: "⚡", msg: "Zeus! Özellikleri için derginin 6. sayfasını okuyun." },
+      hera: { emoji: "👑", msg: "Hera! Özellikleri için derginin 6. sayfasını okuyun." },
+      poseidon: { emoji: "🌊", msg: "Poseidon! Özellikleri için derginin 6. sayfasını okuyun." },
+      demeter: { emoji: "🌾", msg: "Demeter! Özellikleri için derginin 6. sayfasını okuyun." },
+      athena: { emoji: "🦉", msg: "Athena! Özellikleri için derginin 6. sayfasını okuyun." },
+      apollo: { emoji: "🎵", msg: "Apollo! Özellikleri için derginin 6. sayfasını okuyun." },
+      artemis: { emoji: "🏹", msg: "Artemis! Özellikleri için derginin 6. sayfasını okuyun." },
+      ares: { emoji: "🛡️", msg: "Ares! Özellikleri için derginin 6. sayfasını okuyun." },
+      afrodit: { emoji: "💖", msg: "Afrodit! Özellikleri için derginin 6. sayfasını okuyun." },
+      hephaistos: { emoji: "⚒️", msg: "Hephaistos! Özellikleri için derginin 6. sayfasını okuyun." },
+      hermes: { emoji: "🕊️", msg: "Hermes! Özellikleri için derginin 6. sayfasını okuyun." },
+      hestia: { emoji: "🔥", msg: "Hestia! Özellikleri için derginin 6. sayfasını okuyun." },
+      hades: { emoji: "💀", msg: "Hades! Özellikleri için derginin 6. sayfasını okuyun." }
+    };
+
+    const res = messages[winner];
+    resultDiv.innerHTML = `${res.emoji} <br><br> ${res.msg}`;
+
+  });
+</script>
+
+</body>
+</html>
